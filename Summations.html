@@ -1183,26 +1183,26 @@ details.hnd-blue-callout code {
             <div class="main-content">
                 
 <p class="rvps2"><span class="rvts6">Sum across dimensions using the following format: &nbsp;</span></p>
-<div class="rvps31">
+<div class="rvps34">
 <table width="100%" style="border-color: #d9d9d9; border-style: solid; border-width: 1px; background-color: #f6f6f6; border-spacing: 2px;">
  <tr style="vertical-align: top;">
   <td style="padding: 6px 8px;">
-   <p class="rvps34"><span class="rvts54">sum(VariableName[set] for set in Sets)</span></p>
+   <p class="rvps36"><span class="rvts54">sum(VariableName[set] for set in Sets)</span></p>
   </td>
  </tr>
 </table>
 </div>
-<p class="rvps31"><span class="rvts192"><br/></span></p>
-<p class="rvps31"><span class="rvts192">Example:</span></p>
-<div class="rvps31">
+<p class="rvps34"><span class="rvts190"><br/></span></p>
+<p class="rvps34"><span class="rvts190">Example:</span></p>
+<div class="rvps34">
 <table width="100%" style="border-color: #d9d9d9; border-style: solid; border-width: 1px; background-color: #f6f6f6; border-spacing: 2px;">
  <tr style="vertical-align: top;">
   <td style="padding: 6px 8px;">
-   <p class="rvps34"><span class="rvts54">years = collect(Future:Final)</span></p>
-   <p class="rvps34"><span class="rvts54">for area in Areas, ec in ECs, enduse in Enduses, year in years</span></p>
-   <p class="rvps34"><span class="rvts54">&nbsp; xMMSFTotal[enduse,ec,area,year] =&nbsp;</span></p>
-   <p class="rvps34"><span class="rvts54">&nbsp; &nbsp; sum(xMMSF[enduse,tech,ec,area,year] for tech in Techs)</span></p>
-   <p class="rvps34"><span class="rvts54">end</span></p>
+   <p class="rvps36"><span class="rvts54">years = collect(Future:Final)</span></p>
+   <p class="rvps36"><span class="rvts54">for area in Areas, ec in ECs, enduse in Enduses, year in years</span></p>
+   <p class="rvps36"><span class="rvts54">&nbsp; xMMSFTotal[enduse,ec,area,year] =&nbsp;</span></p>
+   <p class="rvps36"><span class="rvts54">&nbsp; &nbsp; sum(xMMSF[enduse,tech,ec,area,year] for tech in Techs)</span></p>
+   <p class="rvps36"><span class="rvts54">end</span></p>
   </td>
  </tr>
 </table>

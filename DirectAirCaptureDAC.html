@@ -1182,36 +1182,345 @@ details.hnd-blue-callout code {
 
             <div class="main-content">
                 
-<p class="rvps15"><span class="rvts231">Enabling Direct Air Capture</span></p>
-<p class="rvps15"><span class="rvts6">Direct Air Capture (DAC) is a module in the model that contains code to simulate energy consumption, emissions, and carbon sequestration of direct air capture devices for each modeled year. Demand and emission values from this module can be found in the </span><span class="rvts18">DirectAirCapture</span><span class="rvts6"> economic sector in the model results. &nbsp;Reduction in carbon emissions from running devices can be also be seen in the overall GHG inventory totals.&nbsp;</span></p>
-<p class="rvps15"><span class="rvts6">The DAC module requires inputs to produce an impact in the model results. These inputs can vary depending on which option (</span><span class="rvts18">DACSw</span><span class="rvts6">) is selected for simulating DAC in the model. Below is a list of options and the inputs required for each:</span></p>
-<ul style="text-indent: 0px; padding: 0; margin: 0 0 0 51px; list-style-position: outside; list-style-type: disc;">
- <li style="text-indent: 0px" class="rvps150 noindent"><span class="rvts14">Exogenous DAC (DACSw = 0)&nbsp;</span></li>
- <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 48px; list-style-position: outside; list-style-type: circle;">
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">xDACDem[Area,Year] &nbsp;- Exogenous demand for DAC&nbsp;</span></li>
- </ul>
- <li style="text-indent: 0px" class="rvps150 noindent"><span class="rvts14">DAC used to meet emissions goal (DACSw = 1)</span></li>
- <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 48px; list-style-position: outside; list-style-type: circle;">
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">xPolGoal[Area,Year] – Emissions goal</span></li>
- </ul>
- <li style="text-indent: 0px" class="rvps150 noindent"><span class="rvts14">DAC used to meet emissions goal or produce to an exogenous level (whichever is higher) (DACSw = 2)</span></li>
- <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 48px; list-style-position: outside; list-style-type: circle;">
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">xDACDem[Area,Year] &nbsp;- Exogenous demand for DAC&nbsp;</span></li>
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">xPolGoal[Area,Year] – Emissions goal</span></li>
- </ul>
- <li style="text-indent: 0px" class="rvps150 noindent"><span class="rvts14">DAC meets national Goal, with production split by exogenous weights (DACSw = 3)</span></li>
- <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 48px; list-style-position: outside; list-style-type: circle;">
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">DACDemNation[Nation,Year] – National DAC demands</span></li>
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">xGoalPolNation[Nation,Year] – National emissions goal</span></li>
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">DACWeight[Area,Year] - Share of area DAC demands of national total</span></li>
- </ul>
- <li style="text-indent: 0px" class="rvps150 noindent"><span class="rvts14">DAC response to Carbon Price (DACSw = 4)</span></li>
- <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 48px; list-style-position: outside; list-style-type: circle;">
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">eCO2Price[Area,Year] – Carbon price</span></li>
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">DACWeight[Area,Year] - Share of area DAC demands of national total</span></li>
-  <li style="text-indent: 0px" class="rvps151 noindent"><span class="rvts14">DACPriceDiffMax[Area,Year] – Price difference fraction for building DAC</span><span class="rvts14"></span></li>
- </ul>
+<h3 class="rvps9"><span class="rvts0"><span class="rvts19">Understanding the Direct Air Capture (DAC) Module</span></span></h3>
+<p class="rvps17"><span class="rvts6">Direct Air Capture (DAC) module simulates energy consumption, emissions, and carbon sequestration of direct air capture devices for each modeled year. Demand and emission values from this module can be found in the "Direct Air Capture" economic sector in the model results. Reduction in carbon emissions from running DAC devices can be also be seen in the overall GHG inventory totals.&nbsp;</span></p>
+<p class="rvps17"><span class="rvts6">Multiple DAC technologies are simulated, allowing for each technology to have its own characteristics. A </span><span class="rvts34">DACTech</span><span class="rvts6"> set stores the different types of DAC technologies which are listed in the table below.</span></p>
+<div class="rvps159">
+<table style="border-width: 0px; border-spacing: 0px;">
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 34px; height: 19px;">
+   <p class="rvps157"><span class="rvts274">No.</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 192px; height: 19px;">
+   <p class="rvps158"><span class="rvts274">DACTech Descriptor</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 142px; height: 19px;">
+   <p class="rvps158"><span class="rvts274">DACTech Key</span></p>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 34px; height: 19px;">
+   <p class="rvps157"><span class="rvts204">1</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 192px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">KOH-Ca Looping</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 142px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">KOHLoop</span></p>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 34px; height: 19px;">
+   <p class="rvps157"><span class="rvts204">2</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 192px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">KOH BPMED</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 142px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">KOHBPMED</span></p>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 34px; height: 19px;">
+   <p class="rvps157"><span class="rvts204">3</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 192px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">Solid Sorbent</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 142px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">SSorbent</span></p>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 34px; height: 19px;">
+   <p class="rvps157"><span class="rvts204">4</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 192px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">MgO Ambient Weathering</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 142px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">AmbientW</span></p>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 34px; height: 19px;">
+   <p class="rvps157"><span class="rvts204">5</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 192px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">Liquid H2</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 142px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">LiquidH2</span></p>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 34px; height: 19px;">
+   <p class="rvps157"><span class="rvts204">6</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 192px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">Liquid NG</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 142px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">LiquidNG</span></p>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 34px; height: 19px;">
+   <p class="rvps157"><span class="rvts204">7</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 192px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">Solid H2</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 142px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">SolidH2</span></p>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 34px; height: 19px;">
+   <p class="rvps157"><span class="rvts204">8</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 192px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">Solid NG</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 0px; vertical-align: top; width: 142px; height: 19px;">
+   <p class="rvps158"><span class="rvts204">SolidNG</span></p>
+  </td>
+ </tr>
+</table>
+</div>
+<p class="rvps17"><span class="rvts6">Code for the DAC module is contained in </span><span class="rvts230">Engine\DirectAirCapture.jl</span><span class="rvts6">. Input data required for operating the DAC module is input through a Julia script file, </span><span class="rvts230">Calibration\CarbonRemoval.jl</span><span class="rvts6">. Inputs vary by type of DAC technology and include the following:&nbsp;</span></p>
+<ul style="text-indent: 0px; padding: 0; margin: 0 0 0 48px; list-style-position: outside; list-style-type: disc;">
+ <li class="rvps6 noindent"><span class="rvts14">Device lifetimes and construction delay&nbsp;</span></li>
+ <li class="rvps6 noindent"><span class="rvts14">Capital, variable, and O&amp;M costs by technology&nbsp;</span></li>
+ <li class="rvps6 noindent"><span class="rvts14">Utilization factors&nbsp;</span></li>
+ <li class="rvps6 noindent"><span class="rvts14">Energy usage fractions and energy efficiency by technology&nbsp;</span></li>
+ <li class="rvps6 noindent"><span class="rvts14">Default available technologies (</span><span class="rvts51">DACMSM0 = 0.0</span><span class="rvts14">)&nbsp;</span></li>
+ <li class="rvps6 noindent"><span class="rvts14">Sequestration fractions and energy penalties by technology&nbsp;</span></li>
+ <li class="rvps6 noindent"><span class="rvts14">Capture carbon transportation prices&nbsp;</span></li>
 </ul>
+<p class="rvps6"><span class="rvts14"><br/></span></p>
+<p class="rvps6"><span class="rvts14">Several options are available for the user to indicate which DAC methodology to use, indicated by a model switch (</span><span class="rvts180">DACSw</span><span class="rvts14">). Depending on which option (</span><span class="rvts180">DACSw</span><span class="rvts14">) the user selects, </span><span class="rvts27">additional input data</span><span class="rvts14"> (beyond the default data entered in </span><span class="rvts228">CarbonRemoval.jl</span><span class="rvts14">) are required to activate the DAC equations.&nbsp;</span></p>
+<p class="rvps6"><span class="rvts14">The table below summarizes the various DAC options and the inputs required for each:</span></p>
+<div class="rvps2">
+<table width="100%" style="border-color: #000000; border-style: solid; border-width: 1px; border-spacing: 2px;">
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 197px;">
+   <p class="rvps163"><span class="rvts87">Options for DAC Methodology</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 96px;">
+   <p class="rvps163"><span class="rvts87">Value of DACSw</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 437px;">
+   <p class="rvps163"><span class="rvts87">Additional Input Data Required</span></p>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 197px;">
+   <p class="rvps6"><span class="rvts121">Exogenous DAC</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 96px;">
+   <p class="rvps48"><span class="rvts277">DACSw = 0</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 437px;">
+   <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 24px; list-style-position: outside; list-style-type: disc;">
+    <li class="rvps6 noindent"><span class="rvts276">xDACDem[Area,Year]-</span><span class="rvts121">Exogenous demand for DAC</span></li>
+   </ul>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 197px;">
+   <p class="rvps160"><span class="rvts121">DAC used to meet emissions goal</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 96px;">
+   <p class="rvps161"><span class="rvts277">DACSw = 1</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 437px;">
+   <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 24px; list-style-position: outside; list-style-type: disc;">
+    <li style="text-indent: 0px" class="rvps162 noindent"><span class="rvts276">xPolGoal[Area,Year]</span><span class="rvts121"> – Emissions goal</span></li>
+   </ul>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 197px;">
+   <p class="rvps6"><span class="rvts121">DAC used to meet emissions goal or produce to an exogenous level (whichever is higher)</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 96px;">
+   <p class="rvps6"><span class="rvts275">DACSw = 2</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 437px;">
+   <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 24px; list-style-position: outside; list-style-type: disc;">
+    <li class="rvps6 noindent"><span class="rvts276">xDACDem[Area,Year]</span><span class="rvts121"> &nbsp;- Exogenous demand for DAC&nbsp;</span></li>
+    <li class="rvps6 noindent"><span class="rvts276">xPolGoal[Area,Year]</span><span class="rvts121"> – Emissions goal</span></li>
+   </ul>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 197px;">
+   <p class="rvps6"><span class="rvts121">DAC meets national Goal, with production split by exogenous weights</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 96px;">
+   <p class="rvps6"><span class="rvts275">DACSw = 3</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 437px;">
+   <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 24px; list-style-position: outside; list-style-type: disc;">
+    <li class="rvps6 noindent"><span class="rvts276">DACDemNation[Nation,Year]</span><span class="rvts121"> – National DAC demands</span></li>
+    <li class="rvps6 noindent"><span class="rvts276">xGoalPolNation[Nation,Year]</span><span class="rvts121"> – National emissions goal</span></li>
+    <li class="rvps6 noindent"><span class="rvts276">DACWeight[Area,Year] </span><span class="rvts121">- Share of area DAC demands of national total</span></li>
+   </ul>
+  </td>
+ </tr>
+ <tr style="vertical-align: top;">
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 197px;">
+   <p class="rvps6"><span class="rvts121">DAC response to Carbon Price</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 96px;">
+   <p class="rvps6"><span class="rvts275">DACSw = 4</span></p>
+  </td>
+  <td style="border-width : 1px; border-color: #000000; border-style: solid; padding: 1px; width: 437px;">
+   <ul style="text-indent: 0px; padding: 0; margin: 0 0 0 24px; list-style-position: outside; list-style-type: disc;">
+    <li class="rvps6 noindent"><span class="rvts276">eCO2Price[Area,Year]</span><span class="rvts121"> – Carbon price</span></li>
+    <li class="rvps6 noindent"><span class="rvts276">DACWeight[Area,Year]</span><span class="rvts121"> - Share of area DAC demands of national total</span></li>
+    <li class="rvps6 noindent"><span class="rvts276">DACPriceDiffMax[Area,Year]</span><span class="rvts121"> – Price difference fraction for building DAC</span></li>
+   </ul>
+  </td>
+ </tr>
+</table>
+</div>
+<p class="rvps2"><span class="rvts6">DAC devices are then initiated for each modeled year as needed specified by the options above. The technologies are selected using consumer choice theory given the cost related inputs, fuel prices, and the technologies available for use (indicated by a non-price factor of 0 </span><span class="rvts37">DACMSM0 = 0.0</span><span class="rvts6"> in </span><span class="rvts230">CarbonRemoval.jl</span><span class="rvts6">). Devices are initiated and constructed after a specified construction delay.&nbsp;</span></p>
+<p class="rvps2"><span class="rvts6">Annual energy usage, emissions produced and amount of carbon captured is estimated by the model. Outputs for the sector energy usage, emissions, investments, and other data are written to the DirectAirCapture supply sector for output and review. Total GHG inventories in the model output are adjusted by the net emissions from DirectAirCapture.&nbsp;</span></p>
+<h3 class="rvps9"><span class="rvts0"><span class="rvts19">Enabling Direct Air Capture</span></span></h3>
+<p class="rvps2"><span class="rvts6">To enable Direct Air Capture (DAC) in ENERGY 2100, </span><span class="rvts18">create a policy file</span><span class="rvts6"> that:</span></p>
+<ol style="text-indent: 0px; padding: 0; margin: 0 0 0 48px; list-style-position: outside;">
+ <li class="rvps2 noindent"><span class="rvts6">Sets the value of </span><span class="rvts34">DACSw</span><span class="rvts6"> to indicate which DAC methodology you want to initiate; and</span></li>
+ <li class="rvps2 noindent"><span class="rvts6">Adds the input data required for that option (see table above).</span></li>
+</ol>
+<p class="rvps2"><span class="rvts6">To modify available technologies:</span></p>
+<ol style="text-indent: 0px; padding: 0; margin: 0 0 0 48px; list-style-position: outside;">
+ <li value="3" class="rvps2 noindent"><span class="rvts6">Use Select statements to select the technologies to activate, and set the DAC market share non-price factor equal to 0 (</span><span class="rvts37">DACMSM0 = 0)</span></li>
+ <li class="rvps2 noindent"><span class="rvts6">Use Select statements to select the technologies to deactivate, and set the DAC market share non-price factor equal to -10 (</span><span class="rvts37">DACTech = -10</span><span class="rvts6">).</span></li>
+</ol>
+<div class="rvps26">
+<table width="100%" style="border-color: #3366ff; border-style: solid; border-width: 3px; border-collapse: collapse; border-top: none; border-right: none; border-bottom: none; border-left: none;">
+ <tr style="vertical-align: top;">
+  <td style="border-width : 2px; border-color: #0080c0; border-style: solid; padding: 2px; border-top: none; border-right: none; border-bottom: none; border-left: none; background-color: #cc99ff; vertical-align: top; width: 2px; height: 58px;">
+   <p class="rvps24"><span class="rvts31"><br/></span></p>
+  </td>
+  <td style="border-width : 2px; border-color: #0080c0; border-style: solid; padding: 2px; border-top: none; border-right: none; border-bottom: none; border-left: none; vertical-align: top; width: 23px; height: 58px;">
+   <p class="rvps39"><span class="rvts55">🕮</span></p>
+  </td>
+  <td style="border-width : 2px; border-color: #0080c0; border-style: solid; padding: 2px; border-top: none; border-right: none; border-bottom: none; border-left: none; vertical-align: top; width: 830px; height: 58px;">
+   <p class="rvps50"><span class="rvts100">Example</span></p>
+   <p class="rvps50"><span class="rvts100"><div class="html-code-box">
+<pre><code>
+#
+# DAC_Exogenous_CA.jl - Direct Air Carbon Test Policy with Exogenous levels of DAC in California
+#
+
+using EnergyModel
+
+module DAC_Exogenous_CA
+
+import ...EnergyModel: ReadDisk,WriteDisk,Select
+import ...EnergyModel: HisTime,ITime,MaxTime,First,Future,Final,Yr
+import ...EnergyModel: @finite_math,finite_inverse,finite_divide,finite_power,finite_exp,finite_log
+import ...EnergyModel: DB
+
+const VariableArray{N} = Array{Float32,N} where {N}
+const SetArray = Vector{String}
+
+Base.@kwdef struct SControl
+  db::String
+
+  CalDB::String = "SCalDB"
+  Input::String = "SInput"
+  Outpt::String = "SOutput"
+
+  Area::SetArray = ReadDisk(db,"MainDB/AreaKey")
+  AreaDS::SetArray = ReadDisk(db,"MainDB/AreaDS")
+  Areas::Vector{Int} = collect(Select(Area))
+  DACTech::SetArray = ReadDisk(db,"$Input/DACTechKey")
+  DACTechDS::SetArray = ReadDisk(db,"$Input/DACTechDS")
+  DACTechs::Vector{Int} = collect(Select(DACTech))
+  Year::SetArray = ReadDisk(db,"MainDB/YearKey")
+  YearDS::SetArray = ReadDisk(db,"MainDB/YearDS")
+  Years::Vector{Int} = collect(Select(Year))
+
+  DACMSM0::VariableArray{3} = ReadDisk(db,"SpInput/DACMSM0") # [DACTech,Area,Year] DAC Market Share Non-Price Factor (Tonnes/Tonnes)
+  DACSw::VariableArray{2} = ReadDisk(db,"SpInput/DACSw") # [Area,Year] Switch to Determine DAC Target
+  xDACDem::VariableArray{2} = ReadDisk(db,"SpInput/xDACDem") # [Area,Year] Exogenous Demand for DAC (Tonnes/Yr)
+
+end
+
+function SupplyPolicy(db)
+  data = SControl(; db)
+  (; Area,DACTech) = data
+  (; Years) = data
+  (; DACMSM0,DACSw,xDACDem) = data
+
+  CA = Select(Area,"CA")
+  years = collect(Yr(2030):Final)
+  for year in years
+    DACSw[CA,year] = 0
+  end
+  
+  WriteDisk(db,"SpInput/DACSw",DACSw)
+
+  xDACDem[CA,Yr(2030)] = 6.8*1e6
+  xDACDem[CA,Yr(2035)] = 35.1*1e6
+  years = collect(Yr(2045):Final)
+  for year in years
+    xDACDem[CA,year] = 80.0*1e6
+  end
+  
+  years = collect(Yr(2031):Yr(2034))
+  for year in years
+    xDACDem[CA,year] = xDACDem[CA,year-1]+(xDACDem[CA,Yr(2035)]-xDACDem[CA,Yr(2030)])/(2035-2030)
+  end
+  
+  years = collect(Yr(2036):Yr(2044))
+  for year in years
+    xDACDem[CA,year] = xDACDem[CA,year-1]+(xDACDem[CA,Yr(2045)]-xDACDem[CA,Yr(2035)])/(2045-2035)
+  end
+
+  WriteDisk(db,"SpInput/xDACDem",xDACDem)
+
+  #
+  ########################
+  #
+  # DAC Market Share Non-Price Factor (mmBtu/mmBtu)
+  #
+  # Hydrogen only in California
+  #
+  dactechs = Select(DACTech)
+  for year in Years, dactech in dactechs
+    DACMSM0[dactech,CA,year] = -10.0
+  end
+
+  dactechs = Select(DACTech,"KOHLoop")
+  for year in Years, dactech in dactechs
+    DACMSM0[dactech,CA,year] =   0.0
+  end
+
+  WriteDisk(db,"SpInput/DACMSM0",DACMSM0)
+end
+
+function PolicyControl(db)
+  @info ("DAC_Exogenous_CA.jl - PolicyControl")
+  SupplyPolicy(db)
+end
+
+if abspath(PROGRAM_FILE) == @__FILE__
+  PolicyControl(DB)
+end 
+
+end
+</code></pre>
+</div></span></p>
+  </td>
+ </tr>
+</table>
+</div>
+<p class="rvps2"><span class="rvts6"></span><span class="rvts6"></span></p>
 
             </div>
             
